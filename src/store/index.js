@@ -9,7 +9,10 @@ export default new Vuex.Store({
   },
   getters: {
     // Get the products amount in the array
-    productsCount(){}
+    productsCount(){},
+    availableProducts(state, getters){
+      return state.products.filter(product => product.inventory > 0)
+    }
   },
   actions: {
     // Make the call to the mock api to get the products array
