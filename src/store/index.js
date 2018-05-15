@@ -7,13 +7,34 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     products:[],
-    cart: []
+    cart: [],
+    checkoutStatus: null
   },
   getters: {
     // Get the products amount in the array
     productsCount () {},
     availableProducts (state, getters) {
       return state.products.filter(product => product.inventory > 0)
+    },
+    cartProducts (state) {
+      return state.cart.map(cartItem => {
+        const product = state.products.find(product => product.id === cartItem.id)
+        return {
+          title: product.title,
+          price: product.price,
+          quantity: cartItem.quantity
+        }
+      })
+    },
+    cartTotal (state, getters) {
+      /*
+      let total = 0
+      getters.cartProducts.forEach(product => {
+        total += product.price * product.quantity
+      })
+      return total
+      */
+      return getters.cartProducts.reduce((total, product) => total + product.price * product.quantity, 0)
     }
   },
   actions: {
@@ -26,7 +47,7 @@ export default new Vuex.Store({
         })
       })
     },
-    addProductToCart(context, product){
+    addProductToCart (context, product){
       // Find item in the cart
       if (product.inventory > 0) {
         const cartItem = context.state.cart.find(item => item.id === product.id)
@@ -37,15 +58,21 @@ export default new Vuex.Store({
         }
         context.commit('decrementProductQuantity', product)
       }
+    },
+    checkout ({state, commit}) {
+      shop.buyProducts(
+        state.cart,
+        () => {
+          commit('emptyCart')
+          commit('setCheckoutStatus', 'success')
+          alert('Checkout successful')
+        },
+        () => {
+          commit('setCheckoutStatus', 'fail')
+          alert('Checkout failed, try again')
+        }
+      )
     }
-    /*,
-    addToCart(context, product){
-      if (product.inventory > 0) {
-        context.commit('pushProductToCart', product)
-      } else {
-
-      }
-    }*/
   },
   mutations: {
     // Update products state in the store
@@ -63,6 +90,12 @@ export default new Vuex.Store({
     },
     decrementProductQuantity (state, product) {
       product.inventory--
+    },
+    setCheckoutStatus (state, status) {
+      state.checkoutStatus = status
+    },
+    emptyCart (state) {
+      state.cart = []
     }
   }
 })
