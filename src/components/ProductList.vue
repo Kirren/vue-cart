@@ -3,23 +3,30 @@
     h1 Product List
     img(v-if="loading", src="https://i.imgur.com/JfPpwOA.gif")
     ul(v-else)
-      li(v-for="product in products") {{product.title}} - {{product.price}}
+      li(v-for="product in products")
+        | {{product.title}} - {{product.price}}
+        button(@click="addProductToCart(product)") Add to cart
 </template>
 
 <script>
   export default {
     name: 'ProductList',
-    data(){
+    data () {
       return {
         loading: false
       }
     },
     computed: {
-      products(){
+      products () {
         return this.$store.getters.availableProducts
       }
     },
-    created(){
+    methods: {
+      addProductToCart (product) {
+        this.$store.dispatch('addProductToCart', product)
+      }
+    },
+    created () {
       this.loading = true
       this.$store.dispatch('fetchProducts')
         .then(() => this.loading = false)
