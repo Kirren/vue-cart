@@ -7,16 +7,19 @@
 
 <script>
   import shop from '@/api/shop'
+  import store from '@/store/index'
+
   export default {
     name: 'ProductList',
-    data () {
-      return {
-        products: []
+    computed: {
+      products() {
+        return store.state.products
       }
     },
     created (){
       shop.getProducts(products => {
-        this.products = products
+        // this.products = products
+        store.commit('setProducts', products)
       })
     }
   }
@@ -31,11 +34,6 @@ h1, h2 {
 ul {
   list-style-type: none;
   padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
 }
 
 a {
