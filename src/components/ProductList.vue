@@ -1,26 +1,30 @@
 <template lang="pug">
   div
     h1 Product List
-    ul
+    img(v-if="loading", src="https://i.imgur.com/JfPpwOA.gif")
+    ul(v-else)
       li(v-for="product in products") {{product.title}} - {{product.price}}
 </template>
 
 <script>
-  import shop from '@/api/shop'
   import store from '@/store/index'
 
   export default {
     name: 'ProductList',
+    data(){
+      return {
+        loading: false
+      }
+    },
     computed: {
-      products() {
+      products(){
         return store.getters.availableProducts
       }
     },
-    created (){
-      shop.getProducts(products => {
-        // this.products = products
-        store.commit('setProducts', products)
-      })
+    created(){
+      this.loading = true
+      store.dispatch('fetchProducts')
+        .then(() => this.loading = false)
     }
   }
 </script>
