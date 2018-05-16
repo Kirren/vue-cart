@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     h1 Shopping Cart
-    p Total: {{total}}
+    p Total: {{total | currency}}
     ul
       li(v-for="product in products")
         | {{product.title}} - {{product.price | currency}} - {{product.quantity}}
