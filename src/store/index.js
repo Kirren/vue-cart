@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import shop from '@/api/shop'
-import actions from './actions'
 import cart from './modules/cart'
 import products from './modules/products'
 
@@ -14,6 +13,6 @@ export default new Vuex.Store({
   },
   state: {},
   getters: {},
-  actions,
+  actions: {},
   mutations: {}
 })
