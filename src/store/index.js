@@ -11,8 +11,7 @@ export default new Vuex.Store({
     checkoutStatus: null
   },
   getters: {
-    // Get the products amount in the array
-    productsCount () {},
+    // Get dynamic values
     availableProducts (state, getters) {
       return state.products.filter(product => product.inventory > 0)
     },
@@ -35,6 +34,11 @@ export default new Vuex.Store({
       return total
       */
       return getters.cartProducts.reduce((total, product) => total + product.price * product.quantity, 0)
+    },
+    productIsInStock () {
+      return (product) => {
+        return product.inventory > 0
+      }
     }
   },
   actions: {
@@ -47,16 +51,16 @@ export default new Vuex.Store({
         })
       })
     },
-    addProductToCart (context, product){
+    addProductToCart ({state, getters, commit}, product){
       // Find item in the cart
-      if (product.inventory > 0) {
-        const cartItem = context.state.cart.find(item => item.id === product.id)
+      if (getters.productIsInStock(product) > 0) {
+        const cartItem = state.cart.find(item => item.id === product.id)
         if (!cartItem) {
-          context.commit('pushProductToCart', product.id)
+          commit('pushProductToCart', product.id)
         } else {
-          context.commit('incrementItemQuantity', cartItem)
+          commit('incrementItemQuantity', cartItem)
         }
-        context.commit('decrementProductQuantity', product)
+        commit('decrementProductQuantity', product)
       }
     },
     checkout ({state, commit}) {
