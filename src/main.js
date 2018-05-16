@@ -4,9 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import store from '@/store/index'
 import {currency} from '@/currency'
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.config.productionTip = false
 Vue.filter('currency', currency)
+Vue.use(BootstrapVue)
 
 /* eslint-disable no-new */
 new Vue({

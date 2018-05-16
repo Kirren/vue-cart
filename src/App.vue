@@ -1,8 +1,10 @@
 <template lang="pug">
-  #app
-    ProductList
-    hr
-    ShoppingCart
+  b-container(fluid)#app
+    b-row
+      b-col(cols="12", md="6")
+        ProductList
+      b-col(cols="12", md="6")
+        ShoppingCart
 </template>
 
 <script>

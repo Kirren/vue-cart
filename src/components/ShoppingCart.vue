@@ -2,10 +2,12 @@
   div
     h1 Shopping Cart
     p Total: {{total | currency}}
-    ul
-      li(v-for="product in products")
+    b-list-group.mb-3
+      b-list-group-item(v-for="product in products")
         | {{product.title}} - {{product.price | currency}} - {{product.quantity}}
-    button(@click="checkout") Checkout
+    b-button(@click="checkout",
+      variant="outline-secondary",
+      size="sm") Checkout
     p(v-if="checkoutStatus") {{checkoutStatus}}
 </template>
 

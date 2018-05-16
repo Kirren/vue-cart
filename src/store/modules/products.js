@@ -7,11 +7,11 @@ export default {
   },
   getters: {
     availableProducts (state, getters) {
-      return state.items.filter(product => product.inventory > 0)
+      return state.items.filter(product => product.quantity > 0)
     },
     productIsInStock () {
       return (product) => {
-        return product.inventory > 0
+        return product.quantity > 0
       }
     }
   },
@@ -20,7 +20,7 @@ export default {
       state.items = products
     },
     decrementProductQuantity (state, product) {
-      product.inventory--
+      product.quantity--
     }
   },
   actions: {
