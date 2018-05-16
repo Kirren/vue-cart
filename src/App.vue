@@ -1,9 +1,8 @@
-<template>
-  <div id="app">
-    <ProductList/>
-    <hr>
-    <ShoppingCart/>
-  </div>
+<template lang="pug">
+  #app
+    ProductList
+    hr
+    ShoppingCart
 </template>
 
 <script>
