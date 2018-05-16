@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import shop from '@/api/shop'
+import actions from './actions'
 
 Vue.use(Vuex)
 
@@ -41,41 +42,7 @@ export default new Vuex.Store({
       }
     }
   },
-  actions: {
-    // Make the call to the mock api to get the products array
-    fetchProducts ({commit}) {
-      return new Promise((resolve, reject) => {
-        shop.getProducts(products => {
-          commit('setProducts', products)
-          resolve()
-        })
-      })
-    },
-    addProductToCart ({state, getters, commit}, product){
-      // Find item in the cart
-      if (getters.productIsInStock(product) > 0) {
-        const cartItem = state.cart.find(item => item.id === product.id)
-        if (!cartItem) {
-          commit('pushProductToCart', product.id)
-        } else {
-          commit('incrementItemQuantity', cartItem)
-        }
-        commit('decrementProductQuantity', product)
-      }
-    },
-    checkout ({state, commit}) {
-      shop.buyProducts(
-        state.cart,
-        () => {
-          commit('emptyCart')
-          commit('setCheckoutStatus', 'success')
-        },
-        () => {
-          commit('setCheckoutStatus', 'fail')
-        }
-      )
-    }
-  },
+  actions,
   mutations: {
     // Update products state in the store
     setProducts (state, products) {
