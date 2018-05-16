@@ -69,11 +69,9 @@ export default new Vuex.Store({
         () => {
           commit('emptyCart')
           commit('setCheckoutStatus', 'success')
-          alert('Checkout successful')
         },
         () => {
           commit('setCheckoutStatus', 'fail')
-          alert('Checkout failed, try again')
         }
       )
     }
