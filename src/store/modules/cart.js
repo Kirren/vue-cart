@@ -1,5 +1,3 @@
-import shop from '@/api/shop'
-
 export default {
   namespaced: true,
   state: {
@@ -44,6 +42,7 @@ export default {
     emptyCart (state) {
       state.items = []
     }
+    //TODO: add amount changer
   },
   actions: {
     addProductToCart({state, getters, commit, rootState, rootGetters}, product) {
@@ -58,16 +57,15 @@ export default {
       }
     },
     checkout({state, commit}) {
-      shop.buyProducts(
-        state.items,
-        () => {
+      setTimeout(() => {
+        // simulate random checkout failure.
+        if (Math.random() > 0.5 || navigator.userAgent.indexOf('PhantomJS') > -1) {
           commit('emptyCart')
           commit('setCheckoutStatus', 'success')
-        },
-        () => {
+        } else {
           commit('setCheckoutStatus', 'fail')
         }
-      )
+      }, 100)
     }
   }
 }

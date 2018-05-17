@@ -1,4 +1,8 @@
-import shop from '@/api/shop'
+import Vue from 'vue'
+import VueResource from 'vue-resource'
+import config from "../../../config";
+
+Vue.use(VueResource)
 
 export default {
   namespaced: true,
@@ -23,14 +27,13 @@ export default {
       product.quantity--
     }
   },
+  //TODO: rewrite get call to be in shop.js
   actions: {
     fetchProducts({commit}) {
-      return new Promise((resolve, reject) => {
-        shop.getProducts(products => {
-          commit('setProducts', products)
-          resolve()
+      Vue.http.get(config.dev.apiHost + config.dev.apiHostPrefix + '/items')
+        .then(response => {
+          commit('setProducts', response.data)
         })
-      })
     }
   }
 }
