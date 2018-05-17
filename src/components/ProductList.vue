@@ -1,21 +1,23 @@
 <template lang="pug">
-  b-container(fluid)
+  div
     h1 Product List
     img(v-if="loading", src="https://i.imgur.com/JfPpwOA.gif")
-    b-row(v-else).text-center
-      b-col(v-for="product in products",
-        @hover="active=true",
-        cols="12", sm="4", md="3",
-        :key="product.id")
-        b-card.mb-2
-          p {{product.title}}
-            b-badge(variant="light").ml-1  {{product.quantity}}
+    b-card-group(v-else, columns).text-center.mb-3
+      b-card(v-for="product in products",
+      :key="product.id",
+      :title="product.title")
+          p(v-if="product.quantity > 0")
+            small {{product.quantity}} items left
+          p(v-else).text-muted
+            small
+              i Product unavailable
+              i &nbsp;
           p.text-danger
             strong {{product.price | currency}}
           b-button(@click="addProductToCart(product)",
-            :disabled="!productIsInStock(product)",
-            variant="outline-secondary",
-            size="sm") Add to cart
+          :disabled="!productIsInStock(product)",
+          variant="outline-secondary",
+          size="sm") Add to cart
 </template>
 
 <script>
