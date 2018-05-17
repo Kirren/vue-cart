@@ -1,9 +1,9 @@
 <template lang="pug">
   b-container(fluid)#app
     b-row
-      b-col(cols="12", md="6")
+      b-col(cols="12", lg="6")
         ProductList
-      b-col(cols="12", md="6")
+      b-col(cols="12", lg="6")
         ShoppingCart
 </template>
 

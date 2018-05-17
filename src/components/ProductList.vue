@@ -1,17 +1,21 @@
 <template lang="pug">
-  div
+  b-container(fluid)
     h1 Product List
     img(v-if="loading", src="https://i.imgur.com/JfPpwOA.gif")
-    b-list-group(v-else).text-left
-      b-list-group-item(v-for="product in products",
-        @hover="active=true")
-        span {{product.title}}:
-        span.red  {{product.price | currency}}
-        b-badge(variant="light").ml-1  {{product.quantity}}
-        b-button(@click="addProductToCart(product)",
-          :disabled="!productIsInStock(product)",
-          variant="outline-secondary",
-          size="sm").float-right Add to cart
+    b-row(v-else).text-center
+      b-col(v-for="product in products",
+        @hover="active=true",
+        cols="12", sm="4", md="3",
+        :key="product.id")
+        b-card.mb-2
+          p {{product.title}}
+            b-badge(variant="light").ml-1  {{product.quantity}}
+          p.text-danger
+            strong {{product.price | currency}}
+          b-button(@click="addProductToCart(product)",
+            :disabled="!productIsInStock(product)",
+            variant="outline-secondary",
+            size="sm") Add to cart
 </template>
 
 <script>
@@ -48,15 +52,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
 a {
   color: #42b983;
 }

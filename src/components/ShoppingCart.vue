@@ -3,7 +3,7 @@
     h1 Shopping Cart
     p Total: {{total | currency}}
     b-list-group.mb-3
-      b-list-group-item(v-for="product in products")
+      b-list-group-item(v-for="product in products", :key="product.id")
         | {{product.title}} - {{product.price | currency}} - {{product.quantity}}
     b-button(@click="checkout",
       variant="outline-secondary",
