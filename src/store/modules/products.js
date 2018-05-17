@@ -23,11 +23,13 @@ export default {
     setProducts (state, products) {
       state.items = products
     },
+    incrementProductQuantity (state, product) {
+      product.quantity++
+    },
     decrementProductQuantity (state, product) {
       product.quantity--
     }
   },
-  //TODO: rewrite get call to be in shop.js
   actions: {
     fetchProducts({commit}) {
       Vue.http.get(config.dev.apiHost + config.dev.apiHostPrefix + '/items')
