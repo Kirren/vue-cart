@@ -15,9 +15,9 @@
           p.text-danger
             strong {{product.price | currency}}
           b-button(@click="addProductToCart(product)",
-          :disabled="!productIsInStock(product)",
-          variant="outline-secondary",
-          size="sm") Add to cart
+            :disabled="!productIsInStock(product)",
+            variant="outline-secondary",
+            size="sm") Add to cart
 </template>
 
 <script>
