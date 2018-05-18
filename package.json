@@ -1,7 +1,7 @@
 {
   "name": "vue-cart",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "A Vue.js Shopping cart project",
   "author": "Helen <kirren@live.com>",
   "private": true,
   "scripts": {
