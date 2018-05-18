@@ -13,8 +13,7 @@
                 @click="incrementProductInCart(product)",
                 :disabled="!itemIsInStock(product.id)") +
               b-button(variant="danger",
-                @click="decrementProductInCart(product)",
-                :disabled="product.quantity < 2") -
+                @click="decrementProductInCart(product)") -
     p
       span.float-left
         strong Total:

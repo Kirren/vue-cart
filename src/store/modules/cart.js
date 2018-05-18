@@ -40,6 +40,9 @@ export default {
     decrementItemQuantity (state, cartItem) {
       cartItem.quantity--
     },
+    removeItemFromCart (state, itemId) {
+      state.items = state.items.filter((item) => item.id !== itemId)
+    },
     setCheckoutStatus (state, status) {
       state.checkoutStatus = status
     },
@@ -72,8 +75,10 @@ export default {
       const stockItem = rootState.products.items.find(item => item.id === product.id)
       if (cartItem.quantity > 1) {
         commit('decrementItemQuantity', cartItem)
-        commit('products/incrementProductQuantity', stockItem, {root: true})
+      } else {
+        commit('removeItemFromCart', cartItem.id)
       }
+      commit('products/incrementProductQuantity', stockItem, {root: true})
     },
     checkout({state, commit}) {
       setTimeout(() => {
