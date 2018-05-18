@@ -1,14 +1,28 @@
 <template lang="pug">
   div
     h1 Shopping Cart
-    p Total: {{total | currency}}
     b-list-group.mb-3
-      b-list-group-item(v-for="product in products")
-        | {{product.title}} - {{product.price | currency}} - {{product.quantity}}
-    b-button(@click="checkout",
-      variant="outline-secondary",
-      size="sm") Checkout
-    p(v-if="checkoutStatus") {{checkoutStatus}}
+      b-list-group-item(v-for="product in products", :key="product.id").text-left
+        b-row
+          b-col(cols="6") {{ product.title }}
+          b-col(cols="3") {{ product.price | currency }}
+          b-col(cols="3")
+            span.float-left {{ product.quantity }}
+            b-button-group(size="sm").float-right
+              b-button(variant="success",
+                @click="incrementProductInCart(product)",
+                :disabled="!itemIsInStock(product.id)") +
+              b-button(variant="danger",
+                @click="decrementProductInCart(product)") -
+    p
+      span.float-left
+        strong Total:
+        |  {{ total | currency }}
+      b-button(@click="checkout",
+        variant="outline-secondary",
+        size="sm").float-right Checkout
+    p(v-if="checkoutStatus",
+      :class="checkoutStatus === 'fail' ? 'text-danger' : 'text-success' ").text-capitalize {{ checkoutStatus }}
 </template>
 
 <script>
@@ -17,16 +31,21 @@
   export default {
     name: 'ShoppingCart',
     computed: {
-      ...mapGetters('cart', {
-        products: 'cartProducts',
-        total: 'cartTotal'
+      ...mapGetters({
+        products: 'cart/cartProducts',
+        total: 'cart/cartTotal',
+        itemIsInStock: 'cart/itemIsInStock'
       }),
       ...mapState('cart', {
         checkoutStatus: state => state.checkoutStatus
       })
     },
     methods: {
-      ...mapActions('cart', ['checkout'])
+      ...mapActions('cart', [
+        'checkout',
+        'incrementProductInCart',
+        'decrementProductInCart'
+      ])
     }
   }
 </script>
@@ -35,11 +54,6 @@
 <style scoped>
 h1, h2 {
   font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
 }
 
 a {

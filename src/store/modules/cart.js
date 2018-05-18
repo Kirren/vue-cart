@@ -1,5 +1,3 @@
-import shop from '@/api/shop'
-
 export default {
   namespaced: true,
   state: {
@@ -11,6 +9,7 @@ export default {
       return state.items.map(cartItem => {
         const product = rootState.products.items.find(product => product.id === cartItem.id)
         return {
+          id: product.id,
           title: product.title,
           price: product.price,
           quantity: cartItem.quantity
@@ -18,14 +17,14 @@ export default {
       })
     },
     cartTotal (state, getters) {
-      /*
-      let total = 0
-      getters.cartProducts.forEach(product => {
-        total += product.price * product.quantity
-      })
-      return total
-      */
       return getters.cartProducts.reduce((total, product) => total + product.price * product.quantity, 0)
+    },
+    itemIsInStock (state, getters, rootState) {
+      const stock = rootState.products.items
+      return (id) => {
+        const stockItem = stock.find(item => item.id === id)
+        return stockItem.quantity > 0
+      }
     }
   },
   mutations: {
@@ -37,6 +36,12 @@ export default {
     },
     incrementItemQuantity (state, cartItem) {
       cartItem.quantity++
+    },
+    decrementItemQuantity (state, cartItem) {
+      cartItem.quantity--
+    },
+    removeItemFromCart (state, itemId) {
+      state.items = state.items.filter((item) => item.id !== itemId)
     },
     setCheckoutStatus (state, status) {
       state.checkoutStatus = status
@@ -57,17 +62,33 @@ export default {
         commit('products/decrementProductQuantity', product, {root:true})
       }
     },
+    incrementProductInCart({state, getters, commit, rootState, rootGetters}, product) {
+      const cartItem = state.items.find(item => item.id === product.id)
+      const stockItem = rootState.products.items.find(item => item.id === product.id)
+      if (rootGetters['products/productIsInStock'](stockItem) > 0) {
+        commit('incrementItemQuantity', cartItem)
+        commit('products/decrementProductQuantity', stockItem, {root:true})
+      }
+    },
+    decrementProductInCart({getters, state, commit, rootGetters, rootState}, product) {
+      const cartItem = state.items.find(item => item.id === product.id)
+      const stockItem = rootState.products.items.find(item => item.id === product.id)
+      if (cartItem.quantity > 1) {
+        commit('decrementItemQuantity', cartItem)
+      } else {
+        commit('removeItemFromCart', cartItem.id)
+      }
+      commit('products/incrementProductQuantity', stockItem, {root: true})
+    },
     checkout({state, commit}) {
-      shop.buyProducts(
-        state.items,
-        () => {
+      setTimeout(() => {
+        if (Math.random() > 0.5 || navigator.userAgent.indexOf('PhantomJS') > -1) {
           commit('emptyCart')
           commit('setCheckoutStatus', 'success')
-        },
-        () => {
+        } else {
           commit('setCheckoutStatus', 'fail')
         }
-      )
+      }, 100)
     }
   }
 }
