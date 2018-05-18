@@ -9,6 +9,7 @@ export default {
       return state.items.map(cartItem => {
         const product = rootState.products.items.find(product => product.id === cartItem.id)
         return {
+          id: product.id,
           title: product.title,
           price: product.price,
           quantity: cartItem.quantity
@@ -41,41 +42,34 @@ export default {
   },
   actions: {
     addProductToCart({state, getters, commit, rootState, rootGetters}, product) {
-      // Check remaining amount of items in stock:
-
-      // if at least 1 left - ...
       if (rootGetters['products/productIsInStock'](product) > 0) {
-        // find passed product in cart:
         const cartItem = state.items.find(item => item.id === product.id)
-        // if item wasn't previously added to cart - ...
         if (!cartItem) {
-          // ... add it ...
           commit('pushProductToCart', product.id)
         } else {
-          // ... or increase amount;
           commit('incrementItemQuantity', cartItem)
         }
-        // then decrease products quantity in stock.
         commit('products/decrementProductQuantity', product, {root:true})
       }
     },
-    incrementProductInCart({getters, state, commit, rootGetters, rootState}, cartItem) {
-      alert(rootGetters['products/productIsInStock'](cartItem))
-      if (rootGetters['products/productIsInStock'](cartItem) > 0) {
+    incrementProductInCart({state, getters, commit, rootState, rootGetters}, product) {
+      const cartItem = state.items.find(item => item.id === product.id)
+      const stockItem = rootState.products.items.find(item => item.id === product.id)
+      if (rootGetters['products/productIsInStock'](stockItem) > 0) {
         commit('incrementItemQuantity', cartItem)
-        commit('products/decrementProductQuantity', cartItem, {root: true})
+        commit('products/decrementProductQuantity', stockItem, {root:true})
       }
     },
-    decrementProductInCart({getters, state, commit, rootGetters, rootState}, cartItem) {
-      alert(state.items[cartItem].quantity)
-      if (state.items[cartItem].quantity > 0) {
+    decrementProductInCart({getters, state, commit, rootGetters, rootState}, product) {
+      const cartItem = state.items.find(item => item.id === product.id)
+      const stockItem = rootState.products.items.find(item => item.id === product.id)
+      if (cartItem.quantity > 1) {
         commit('decrementItemQuantity', cartItem)
-        commit('products/incrementProductQuantity', cartItem, {root: true})
+        commit('products/incrementProductQuantity', stockItem, {root: true})
       }
     },
     checkout({state, commit}) {
       setTimeout(() => {
-        // simulate random checkout failure.
         if (Math.random() > 0.5 || navigator.userAgent.indexOf('PhantomJS') > -1) {
           commit('emptyCart')
           commit('setCheckoutStatus', 'success')
