@@ -11,7 +11,7 @@
             b-button-group(size="sm").float-right
               b-button(variant="success",
                 @click="incrementProductInCart(product)",
-                :disabled="!productIsInStock(product)") +
+                :disabled="!itemIsInStock(product.id)") +
               b-button(variant="danger",
                 @click="decrementProductInCart(product)",
                 :disabled="product.quantity < 2") -
@@ -35,7 +35,7 @@
       ...mapGetters({
         products: 'cart/cartProducts',
         total: 'cart/cartTotal',
-        productIsInStock: 'products/productIsInStock'
+        itemIsInStock: 'cart/itemIsInStock'
       }),
       ...mapState('cart', {
         checkoutStatus: state => state.checkoutStatus

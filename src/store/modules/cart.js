@@ -18,6 +18,13 @@ export default {
     },
     cartTotal (state, getters) {
       return getters.cartProducts.reduce((total, product) => total + product.price * product.quantity, 0)
+    },
+    itemIsInStock (state, getters, rootState) {
+      const stock = rootState.products.items
+      return (id) => {
+        const stockItem = stock.find(item => item.id === id)
+        return stockItem.quantity > 0
+      }
     }
   },
   mutations: {
